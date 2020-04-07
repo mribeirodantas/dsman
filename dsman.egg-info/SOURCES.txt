@@ -1,0 +1,7 @@
+README.md
+dsman
+setup.py
+dsman.egg-info/PKG-INFO
+dsman.egg-info/SOURCES.txt
+dsman.egg-info/dependency_links.txt
+dsman.egg-info/top_level.txt

@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: dsman
+Version: 0.1
+Summary: Data Science projects Manager
+Home-page: https://github.com/mribeirodantas/dsman
+Author: Marcel Ribeiro-Dantas
+Author-email: marcel.ribeiro-dantas@curie.fr
+License: UNKNOWN
+Description: dsman is a manager for data science projects. It's supposed to work closely
+        integrated with DVC and git.
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown

@@ -1,0 +1,5 @@
+Add logging
+Install dsman with folder for config files and stuff
+create a database with information about all projects. Not like MySQL
+but like those ones who are single file DBMS. This way it doesnt matter where
+the user creates the projects, we can track everything.
