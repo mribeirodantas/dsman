@@ -5,6 +5,8 @@ import os
 import yaml
 import fileinput
 import subprocess
+import sqlite3
+import datetime
 
 def mkdir_by_path(parent_tree, path_part):
     parent_tree_copy = list(parent_tree)
@@ -109,6 +111,24 @@ if __name__ == '__main__':
     # is to extract a scaffold from an existing project tree structure
     ARGS = MY_PARSER.parse_args()
 
+    # if it's the first time this user is using dsman
+    config_folder = os.path.expanduser('~') + '/.dsman'
+    if not os.path.exists(config_folder):
+        print('This is the first time you run dsman with this user.')
+        print('Creating config folder in ' + config_folder)
+        os.makedirs(config_folder)
+        # Creates SQLite database file there
+        conn = sqlite3.connect(config_folder + '/dsman.db')
+        c = conn.cursor()
+        # Creates table
+        c.execute('''CREATE TABLE projects
+             (created_on text, created_at text, project_name text,
+              project_desc text, project_path text)''')
+        # Saves (commit) the changes
+        conn.commit()
+        # Closes connection
+        conn.close()
+
     # Sometimes, the user just wants to record the scaffold of a project
     if ARGS.record_template is not None:
         sys.exit()
@@ -144,9 +164,20 @@ if __name__ == '__main__':
                     os.chdir(ARGS.project_path)
                     create_recursive_directories(config_file_dictionary, [])
 
-
                 except yaml.YAMLError as exc:
                     print(exc)
+
+        # Store details in SQLite
+        conn = sqlite3.connect(config_folder + '/dsman.db')
+        c = conn.cursor()
+        # Inserts project metadata
+        now = str(datetime.datetime.now()).split(' ')
+        c.execute("INSERT INTO projects VALUES (?,?,'','',?)", (now[0], now[1],
+            os.path.abspath(ARGS.project_path)))
+        # Saves (commit) the changes
+        conn.commit()
+        # Closes connection
+        conn.close()
     # Starting Git
     subprocess.run(['git', 'init'])
     # Start dvc
