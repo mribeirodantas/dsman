@@ -5,6 +5,8 @@ import os
 import yaml
 import fileinput
 import subprocess
+import sqlite3
+import datetime
 
 def mkdir_by_path(parent_tree, path_part):
     parent_tree_copy = list(parent_tree)
@@ -96,23 +98,57 @@ MY_PARSER.add_argument('-p',
                        dest='project_path',
                        type=str,
                        help='Set project folder')
+MY_PARSER.add_argument('-f',
+                       '--force',
+                       action='store_true',
+                       default=False,
+                       dest='force_create',
+                       help='Force the creation of tree structure in non' +
+                            '-empty folder')
 
 if __name__ == '__main__':
     # Handle parsing and call RecordTemplateStore if all the user wants
     # is to extract a scaffold from an existing project tree structure
     ARGS = MY_PARSER.parse_args()
 
+    # if it's the first time this user is using dsman
+    config_folder = os.path.expanduser('~') + '/.dsman'
+    if not os.path.exists(config_folder):
+        print('This is the first time you run dsman with this user.')
+        print('Creating config folder in ' + config_folder)
+        os.makedirs(config_folder)
+        # Creates SQLite database file there
+        conn = sqlite3.connect(config_folder + '/dsman.db')
+        c = conn.cursor()
+        # Creates table
+        c.execute('''CREATE TABLE projects
+             (created_on text, created_at text, project_name text,
+              project_desc text, project_path text)''')
+        # Saves (commit) the changes
+        conn.commit()
+        # Closes connection
+        conn.close()
+
     # Sometimes, the user just wants to record the scaffold of a project
     if ARGS.record_template is not None:
         sys.exit()
-    # Create scaffold for a project
+    # Otherwise, create scaffold for a project
     if ARGS.project_path is None:
         print('You must provide a project path to indicate where the' +
               ' scaffold should be created.')
         sys.exit()
+    elif not os.path.isabs(ARGS.project_path):
+        print('You must provide a full path.')
+        sys.exit()
     else:
         if not os.path.exists(ARGS.project_path):
             os.makedirs(ARGS.project_path)
+        elif len(os.listdir(ARGS.project_path)) != 0:
+            if not ARGS.force_create:
+                print('The project path is not an empty folder. If you really ' +
+                      'want to create a tree structure there, run dsman again ' +
+                      'adding the -f  parameter')
+                sys.exit()
 
         if ARGS.template_path is None:
             yaml_template = {'data': None, 'documentation': None,
@@ -131,9 +167,20 @@ if __name__ == '__main__':
                     os.chdir(ARGS.project_path)
                     create_recursive_directories(config_file_dictionary, [])
 
-
                 except yaml.YAMLError as exc:
                     print(exc)
+
+        # Store details in SQLite
+        conn = sqlite3.connect(config_folder + '/dsman.db')
+        c = conn.cursor()
+        # Inserts project metadata
+        now = str(datetime.datetime.now()).split(' ')
+        c.execute("INSERT INTO projects VALUES (?,?,'','',?)", (now[0], now[1],
+            os.path.abspath(ARGS.project_path)))
+        # Saves (commit) the changes
+        conn.commit()
+        # Closes connection
+        conn.close()
     # Starting Git
     subprocess.run(['git', 'init'])
     # Start dvc

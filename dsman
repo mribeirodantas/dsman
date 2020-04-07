@@ -138,7 +138,7 @@ if __name__ == '__main__':
               ' scaffold should be created.')
         sys.exit()
     elif not os.path.isabs(ARGS.project_path):
-        print('You must provide a full path')
+        print('You must provide a full path.')
         sys.exit()
     else:
         if not os.path.exists(ARGS.project_path):
