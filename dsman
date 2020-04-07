@@ -132,10 +132,13 @@ if __name__ == '__main__':
     # Sometimes, the user just wants to record the scaffold of a project
     if ARGS.record_template is not None:
         sys.exit()
-    # Create scaffold for a project
+    # Otherwise, create scaffold for a project
     if ARGS.project_path is None:
         print('You must provide a project path to indicate where the' +
               ' scaffold should be created.')
+        sys.exit()
+    elif not os.path.isabs(ARGS.project_path):
+        print('You must provide a full path')
         sys.exit()
     else:
         if not os.path.exists(ARGS.project_path):
