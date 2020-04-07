@@ -98,43 +98,46 @@ MY_PARSER.add_argument('-p',
                        help='Set project folder')
 
 if __name__ == '__main__':
+    # Handle parsing and call RecordTemplateStore if all the user wants
+    # is to extract a scaffold from an existing project tree structure
     ARGS = MY_PARSER.parse_args()
 
     # Sometimes, the user just wants to record the scaffold of a project
     if ARGS.record_template is not None:
         sys.exit()
     # Create scaffold for a project
+    if ARGS.project_path is None:
+        print('You must provide a project path to indicate where the' +
+              ' scaffold should be created.')
+        sys.exit()
     else:
-        if ARGS.project_path is None:
-            print('You must provide a project path to indicate where the' +
-                  ' scaffold should be created')
+        if not os.path.exists(ARGS.project_path):
+            os.makedirs(ARGS.project_path)
+
+        if ARGS.template_path is None:
+            yaml_template = {'data': None, 'documentation': None,
+                             'reports': None, 'scripts': ['outputs']}
+            print('Using default template...')
+            os.chdir(ARGS.project_path)
+            create_recursive_directories(yaml_template, [])
+
         else:
-            if not os.path.exists(ARGS.project_path):
-                os.makedirs(ARGS.project_path)
+            template_path = ARGS.template_path
+            with open(os.path.abspath(template_path), 'r') as config_file_stream:
+                try:
+                    config_file_dictionary = yaml.load(config_file_stream,
+                                                       Loader=yaml.FullLoader)
 
-            if ARGS.template_path is None:
-                yaml_template = {'data': None, 'documentation': None,
-                                 'reports': None, 'scripts': ['outputs']}
-                print('Using default template...')
-                os.chdir(ARGS.project_path)
-                create_recursive_directories(yaml_template, [])
-
-            else:
-                template_path = ARGS.template_path
-                with open(os.path.abspath(template_path), 'r') as config_file_stream:
-                    try:
-                        config_file_dictionary = yaml.load(config_file_stream,
-                                                           Loader=yaml.FullLoader)
-
-                        os.chdir(ARGS.project_path)
-                        create_recursive_directories(config_file_dictionary, [])
+                    os.chdir(ARGS.project_path)
+                    create_recursive_directories(config_file_dictionary, [])
 
 
-                    except yaml.YAMLError as exc:
-                        print(exc)
+                except yaml.YAMLError as exc:
+                    print(exc)
     # Starting Git
     subprocess.run(['git', 'init'])
     # Start dvc
     subprocess.run(['dvc', 'init'])
     # First commit
+    subprocess.run(['git', 'add', '.'])
     subprocess.run(['git', 'commit', '-m', 'Initiates Git repository and DVC'])
