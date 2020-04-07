@@ -4,6 +4,7 @@ import sys
 import os
 import yaml
 import fileinput
+import subprocess
 
 def mkdir_by_path(parent_tree, path_part):
     parent_tree_copy = list(parent_tree)
@@ -131,3 +132,9 @@ if __name__ == '__main__':
 
                     except yaml.YAMLError as exc:
                         print(exc)
+    # Starting Git
+    subprocess.run(['git', 'init'])
+    # Start dvc
+    subprocess.run(['dvc', 'init'])
+    # First commit
+    subprocess.run(['git', 'commit', '-m', 'Initiates Git repository and DVC'])
