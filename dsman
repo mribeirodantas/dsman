@@ -96,6 +96,13 @@ MY_PARSER.add_argument('-p',
                        dest='project_path',
                        type=str,
                        help='Set project folder')
+MY_PARSER.add_argument('-f',
+                       '--force',
+                       action='store_true',
+                       default=False,
+                       dest='force_create',
+                       help='Force the creation of tree structure in non' +
+                            '-empty folder')
 
 if __name__ == '__main__':
     # Handle parsing and call RecordTemplateStore if all the user wants
@@ -113,6 +120,12 @@ if __name__ == '__main__':
     else:
         if not os.path.exists(ARGS.project_path):
             os.makedirs(ARGS.project_path)
+        elif len(os.listdir(ARGS.project_path)) != 0:
+            if not ARGS.force_create:
+                print('The project path is not an empty folder. If you really ' +
+                      'want to create a tree structure there, run dsman again ' +
+                      'adding the -f  parameter')
+                sys.exit()
 
         if ARGS.template_path is None:
             yaml_template = {'data': None, 'documentation': None,
