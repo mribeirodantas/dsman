@@ -77,6 +77,19 @@ class RecordTemplateStore(argparse.Action):
         print('Dictionary written to {}.yaml in the current directory\
               '.format(os.path.basename(values)))
 
+def list_projects():
+    # connect to SQLite
+    conn = sqlite3.connect(config_folder + '/dsman.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM projects')
+    data = c.fetchall()
+    print("('created_on', 'created_at', 'project_name', 'project_desc'," +
+          "'project_path')")
+    for row in data :
+        print(row)
+    # Closes connection
+    conn.close()
+
 MY_PARSER = argparse.ArgumentParser()
 MY_PARSER.add_argument('-r',
                        '--record_template',
@@ -105,6 +118,12 @@ MY_PARSER.add_argument('-f',
                        dest='force_create',
                        help='Force the creation of tree structure in non' +
                             '-empty folder')
+MY_PARSER.add_argument('-l',
+                       '--list',
+                       action='store_true',
+                       default=False,
+                       dest='list_projects',
+                       help='List all projects managed by dsman')
 
 if __name__ == '__main__':
     # Handle parsing and call RecordTemplateStore if all the user wants
@@ -131,6 +150,10 @@ if __name__ == '__main__':
 
     # Sometimes, the user just wants to record the scaffold of a project
     if ARGS.record_template is not None:
+        sys.exit()
+    # Or to list the projects managed by dsman
+    elif ARGS.list_projects is True:
+        list_projects()
         sys.exit()
     # Otherwise, create scaffold for a project
     if ARGS.project_path is None:

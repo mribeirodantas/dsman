@@ -6,8 +6,15 @@ Home-page: https://github.com/mribeirodantas/dsman
 Author: Marcel Ribeiro-Dantas
 Author-email: marcel.ribeiro-dantas@curie.fr
 License: UNKNOWN
-Description: dsman is a manager for data science projects. It's supposed to work closely
+Description: # dsman
+        dsman is a manager for data science projects. It's supposed to work closely
         integrated with DVC and git.
+        
+        https://pypi.org/project/dsman/0.1/
+        
+        # Installation
+        You can install this python package with:
+        pip install dsman
         
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
