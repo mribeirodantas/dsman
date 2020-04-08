@@ -111,6 +111,20 @@ MY_PARSER.add_argument('-p',
                        dest='project_path',
                        type=str,
                        help='Set project folder')
+MY_PARSER.add_argument('-n',
+                       '--project_name',
+                       metavar='name',
+                       action='store',
+                       dest='project_name',
+                       type=str,
+                       help='Set a name for your project')
+MY_PARSER.add_argument('-d',
+                       '--project_description',
+                       metavar='desc',
+                       action='store',
+                       dest='project_desc',
+                       type=str,
+                       help='Set a description for your project')
 MY_PARSER.add_argument('-f',
                        '--force',
                        action='store_true',
@@ -193,13 +207,18 @@ if __name__ == '__main__':
                 except yaml.YAMLError as exc:
                     print(exc)
 
+        if 'project_name' not in ARGS:
+            ARGS.project_name = ''
+        if 'project_desc' not in ARGS:
+            ARGS.project_desc = ''
         # Store details in SQLite
         conn = sqlite3.connect(config_folder + '/dsman.db')
         c = conn.cursor()
         # Inserts project metadata
         now = str(datetime.datetime.now()).split(' ')
-        c.execute("INSERT INTO projects VALUES (?,?,'','',?)", (now[0], now[1],
-            os.path.abspath(ARGS.project_path)))
+        c.execute("INSERT INTO projects VALUES (?,?,?,?,?)", (now[0], now[1],
+                  ARGS.project_name, ARGS.project_desc,
+                  os.path.abspath(ARGS.project_path)))
         # Saves (commit) the changes
         conn.commit()
         # Closes connection

@@ -2,8 +2,8 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
-     name='dsman',  
-     version='0.1',
+     name='dsman',
+     version='0.2',
      scripts=['dsman'] ,
      author="Marcel Ribeiro-Dantas",
      author_email="marcel.ribeiro-dantas@curie.fr",
