@@ -8,5 +8,5 @@ https://pypi.org/project/dsman/
 You can install this python package with:
 pip install dsman
 
-# Example
-[![asciicast](https://asciinema.org/a/wxwRfLbJffYO7Km5rw00KURhi.svg)](https://asciinema.org/a/wxwRfLbJffYO7Km5rw00KURhi)
+# Demonstration
+<img src="https://media.giphy.com/media/YO9wcQJIKHsYemN7Ni/giphy.gif" width="480" height="415" frameBorder="0" />
