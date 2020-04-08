@@ -208,6 +208,8 @@ if __name__ == '__main__':
     subprocess.run(['git', 'init'])
     # Start dvc
     subprocess.run(['dvc', 'init'])
+    # Add git hooks to integrate more tightly with git
+    subprocess.run(['dvc', 'install'])
     # First commit
     subprocess.run(['git', 'add', '.'])
     subprocess.run(['git', 'commit', '-m', 'Initiates Git repository and DVC'])
