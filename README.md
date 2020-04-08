@@ -7,3 +7,6 @@ https://pypi.org/project/dsman/
 # Installation
 You can install this python package with:
 pip install dsman
+
+# Example
+[![asciicast](https://asciinema.org/a/OXvUJneG6nYNr9fd8rdtSMmnI.svg)](https://asciinema.org/a/OXvUJneG6nYNr9fd8rdtSMmnI)
