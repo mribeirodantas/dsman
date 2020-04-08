@@ -9,4 +9,4 @@ You can install this python package with:
 pip install dsman
 
 # Example
-[![asciicast](https://asciinema.org/a/OXvUJneG6nYNr9fd8rdtSMmnI.svg)](https://asciinema.org/a/OXvUJneG6nYNr9fd8rdtSMmnI)
+[![asciicast](https://asciinema.org/a/wxwRfLbJffYO7Km5rw00KURhi.svg)](https://asciinema.org/a/wxwRfLbJffYO7Km5rw00KURhi)
